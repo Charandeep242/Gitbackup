@@ -1,0 +1,52 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.BatchFile>
+      <command>@echo off&#xd;
+echo on&#xd;
+set VIEW_DIR=C:\Users\Charan Deep\.jenkins\jobs\File example&#xd;
+set HUDSON_DIR=%VIEW_DIR%\ate_int\hudson\backup&#xd;
+set PERL_DIR=%VIEW_DIR%\MCT_COMP\comp\tools\Perl&#xd;
+&#xd;
+for /d %%i in (%WORKSPACE%\..\..\*) do call :check_workspace %%i&#xd;
+rem for /F %%i in (%WORKSPACE%\..\..\..\*.xml) do call :check_config %%i&#xd;
+FOR  %%i IN (dir /b %WORKSPACE%\..\..\..\*.xml) DO call :check_config %%i&#xd;
+FOR  %%i IN (dir /b %WORKSPACE%\..\..\..\scriptler\scriptler.xml) DO call :check_config %%i&#xd;
+FOR  %%i IN (dir /b %WORKSPACE%\..\..\..\scriptler\scripts\*.groovy) DO call :check_config %%i&#xd;
+goto :EOF&#xd;
+&#xd;
+:check_workspace&#xd;
+  echo.&#xd;
+  echo ************ checking hudson job: %~nx1&#xd;
+  set ConfigFile=%1\config.xml&#xd;
+  set CC_ConfigFile=%HUDSON_DIR%\%~nx1\config.xml&#xd;
+  if not exist %ConfigFile% (echo *** skipping job &apos;%~nx1&apos; - doesn&apos;t find config.xml &amp;&amp; goto :EOF) else (call :store_configuration)&#xd;
+goto :EOF&#xd;
+&#xd;
+:check_config&#xd;
+  echo.&#xd;
+  echo ************ checking configfile: %~nx1&#xd;
+  set ConfigFile=%1&#xd;
+  set CC_ConfigFile=%HUDSON_DIR%\%~nx1&#xd;
+  if not exist %ConfigFile% (echo *** skipping config file &apos;%~nx1&apos; - doesn&apos;t find &amp;&amp; goto :EOF) else (call :store_configuration)&#xd;
+goto :EOF&#xd;
+&#xd;
+:store_configuration&#xd;
+  echo +++ configuration file:  %ConfigFile%&#xd;
+goto :EOF</command>
+    </hudson.tasks.BatchFile>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+</project>
